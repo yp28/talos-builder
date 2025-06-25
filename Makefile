@@ -1,9 +1,11 @@
 PKG_VERSION = v1.10.0
-TALOS_VERSION = v1.10.4
+TALOS_VERSION = v1.10.2
 SBCOVERLAY_VERSION = main
 
-REGISTRY ?= ghcr.io
-REGISTRY_USERNAME ?= yp28
+PUSH_REGISTRY ?= ghcr.io
+PUSH_REGISTRY_USERNAME ?= yp28
+PULL_REGISTRY ?= ghcr.io
+PULL_REGISTRY_USERNAME ?= talos-rpi5
 
 TAG ?= $(shell git describe --tags --exact-match)
 
@@ -75,7 +77,7 @@ patches: patches-pkgs patches-talos
 kernel:
 	cd "$(CHECKOUTS_DIRECTORY)/pkgs" && \
 		$(MAKE) \
-			REGISTRY=$(REGISTRY) USERNAME=$(REGISTRY_USERNAME) PUSH=true \
+			REGISTRY=$(PUSH_REGISTRY) USERNAME=$(PUSH_REGISTRY_USERNAME) PUSH=true \
 			PLATFORM=linux/arm64 \
 			kernel
 
@@ -104,12 +106,12 @@ installer:
 	cd "$(CHECKOUTS_DIRECTORY)/talos" && \
 		$(MAKE) \
 			REGISTRY=$(REGISTRY) USERNAME=$(REGISTRY_USERNAME) PUSH=true \
-			PKG_KERNEL=$(REGISTRY)/$(REGISTRY_USERNAME)/kernel:$(PKGS_TAG) \
+			PKG_KERNEL=$(PULL_REGISTRY)/$(PULL_REGISTRY_USERNAME)/kernel:$(PKGS_TAG) \
 			INSTALLER_ARCH=arm64 PLATFORM=linux/arm64 \
 			IMAGER_ARGS="--overlay-name=rpi5 --overlay-image=$(REGISTRY)/$(REGISTRY_USERNAME)/sbc-raspberrypi5:$(SBCOVERLAY_TAG) --system-extension-image=$(GVISOR_EXTENSION)" --system-extension-image=$(ISCSI_EXTENSION)" \
 			kernel initramfs imager installer-base installer && \
 		docker \
-			run --rm -t -v ./_out:/out -v /dev:/dev --privileged $(REGISTRY)/$(REGISTRY_USERNAME)/imager:$(TALOS_TAG) \
+			run --rm -t -v ./_out:/out -v /dev:/dev --privileged $(PULL_REGISTRY)/$(PULL_REGISTRY_USERNAME)/imager:$(TALOS_TAG) \
 			metal --arch arm64 \
 			--base-installer-image="$(REGISTRY)/$(REGISTRY_USERNAME)/installer:$(TALOS_TAG)" \
 			--overlay-name="rpi5" \
