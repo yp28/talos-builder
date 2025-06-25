@@ -10,7 +10,7 @@ PULL_REGISTRY_USERNAME ?= talos-rpi5
 TAG ?= $(shell git describe --tags --exact-match)
 
 GVISOR_EXTENSION ?= ghcr.io/siderolabs/gvisor:20250505.0@sha256:d7503b59603f030b972ceb29e5e86979e6c889be1596e87642291fee48ce380c
-ISCSI_EXTENSION ?= ghcr.io/siderolabs/iscsi-tools:v0.2.0@sha256:ead7d05a63a7b9e1ce3fd8b4b88ab301ee3d236549972f9bb83583a799a01366
+ISCSI_EXTENSION ?= ghcr.io/siderolabs/iscsi-tools:v0.2.0@sha256:f2d78a7f19d301f2bf88ec99d948ffc63778125ce3acb0146049b75ed7ecd18c
 
 PKG_REPOSITORY = https://github.com/siderolabs/pkgs.git
 TALOS_REPOSITORY = https://github.com/siderolabs/talos.git
