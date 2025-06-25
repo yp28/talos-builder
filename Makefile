@@ -126,9 +126,9 @@ installer:
 #
 .PHONY: release
 release:
-	docker pull $(REGISTRY)/$(REGISTRY_USERNAME)/installer:$(TALOS_TAG) && \
-		docker tag $(REGISTRY)/$(REGISTRY_USERNAME)/installer:$(TALOS_TAG) $(REGISTRY)/$(REGISTRY_USERNAME)/installer:$(TAG) && \
-		docker push $(REGISTRY)/$(REGISTRY_USERNAME)/installer:$(TAG)
+	docker pull $(PUSH_REGISTRY)/$(PUSH_REGISTRY_USERNAME)/installer:$(TALOS_TAG) && \
+		docker tag $(PUSH_REGISTRY)/$(PUSH_REGISTRY_USERNAME)/installer:$(TALOS_TAG) $(PUSH_REGISTRY)/$(PUSH_REGISTRY_USERNAME)/installer:$(TAG) && \
+		docker push $(PUSH_REGISTRY)/$(PUSH_REGISTRY_USERNAME)/installer:$(TAG)
 
 
 
