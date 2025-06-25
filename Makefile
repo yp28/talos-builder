@@ -91,8 +91,8 @@ overlay:
 	@echo SBCOVERLAY_TAG = $(SBCOVERLAY_TAG)
 	cd "$(CHECKOUTS_DIRECTORY)/sbc-raspberrypi5" && \
 		$(MAKE) \
-			REGISTRY=$(REGISTRY) USERNAME=$(REGISTRY_USERNAME) IMAGE_TAG=$(SBCOVERLAY_TAG) PUSH=true \
-			PKGS_PREFIX=$(REGISTRY)/$(REGISTRY_USERNAME) PKGS=$(PKGS_TAG) \
+			REGISTRY=$(PUSH_REGISTRY) USERNAME=$(PUSH_REGISTRY_USERNAME) IMAGE_TAG=$(SBCOVERLAY_TAG) PUSH=true \
+			PKGS_PREFIX=$(PUSH_REGISTRY)/$(PUSH_REGISTRY_USERNAME) PKGS=$(PKGS_TAG) \
 			INSTALLER_ARCH=arm64 PLATFORM=linux/arm64 \
 			sbc-raspberrypi5
 
@@ -105,17 +105,17 @@ overlay:
 installer:
 	cd "$(CHECKOUTS_DIRECTORY)/talos" && \
 		$(MAKE) \
-			REGISTRY=$(REGISTRY) USERNAME=$(REGISTRY_USERNAME) PUSH=true \
+			REGISTRY=$(PUSH_REGISTRY) USERNAME=$(PUSH_REGISTRY_USERNAME) PUSH=true \
 			PKG_KERNEL=$(PULL_REGISTRY)/$(PULL_REGISTRY_USERNAME)/kernel:$(PKGS_TAG) \
 			INSTALLER_ARCH=arm64 PLATFORM=linux/arm64 \
-			IMAGER_ARGS="--overlay-name=rpi5 --overlay-image=$(REGISTRY)/$(REGISTRY_USERNAME)/sbc-raspberrypi5:$(SBCOVERLAY_TAG) --system-extension-image=$(GVISOR_EXTENSION)" --system-extension-image=$(ISCSI_EXTENSION)" \
+			IMAGER_ARGS="--overlay-name=rpi5 --overlay-image=$(PUSH_REGISTRY)/$(PUSH_REGISTRY_USERNAME)/sbc-raspberrypi5:$(SBCOVERLAY_TAG) --system-extension-image=$(GVISOR_EXTENSION)" --system-extension-image=$(ISCSI_EXTENSION)" \
 			kernel initramfs imager installer-base installer && \
 		docker \
 			run --rm -t -v ./_out:/out -v /dev:/dev --privileged $(PULL_REGISTRY)/$(PULL_REGISTRY_USERNAME)/imager:$(TALOS_TAG) \
 			metal --arch arm64 \
-			--base-installer-image="$(REGISTRY)/$(REGISTRY_USERNAME)/installer:$(TALOS_TAG)" \
+			--base-installer-image="$(PULL_REGISTRY)/$(PULL_REGISTRY_USERNAME)/installer:$(TALOS_TAG)" \
 			--overlay-name="rpi5" \
-			--overlay-image="$(REGISTRY)/$(REGISTRY_USERNAME)/sbc-raspberrypi5:$(SBCOVERLAY_TAG)" \
+			--overlay-image="$(PUSH_REGISTRY)/$(PUSH_REGISTRY_USERNAME)/sbc-raspberrypi5:$(SBCOVERLAY_TAG)" \
 			--system-extension-image="$(GVISOR_EXTENSION)" \
 			--system-extension-image="$(ISCSI_EXTENSION)"
 
