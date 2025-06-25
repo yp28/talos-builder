@@ -108,7 +108,7 @@ installer:
 			REGISTRY=$(PUSH_REGISTRY) USERNAME=$(PUSH_REGISTRY_USERNAME) PUSH=true \
 			PKG_KERNEL=$(PULL_REGISTRY)/$(PULL_REGISTRY_USERNAME)/kernel:$(PKGS_TAG) \
 			INSTALLER_ARCH=arm64 PLATFORM=linux/arm64 \
-			IMAGER_ARGS="--overlay-name=rpi5 --overlay-image=$(PUSH_REGISTRY)/$(PUSH_REGISTRY_USERNAME)/sbc-raspberrypi5:$(SBCOVERLAY_TAG) --system-extension-image=$(GVISOR_EXTENSION)" --system-extension-image=$(ISCSI_EXTENSION)" \
+			IMAGER_ARGS="--overlay-name=rpi5 --overlay-image=$(PUSH_REGISTRY)/$(PUSH_REGISTRY_USERNAME)/sbc-raspberrypi5:$(SBCOVERLAY_TAG) --system-extension-image="$(GVISOR_EXTENSION)" --system-extension-image=$(ISCSI_EXTENSION)" \
 			kernel initramfs imager installer-base installer && \
 		docker \
 			run --rm -t -v ./_out:/out -v /dev:/dev --privileged $(PULL_REGISTRY)/$(PULL_REGISTRY_USERNAME)/imager:$(TALOS_TAG) \
