@@ -1,7 +1,7 @@
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - "v*.*.*"
 
 jobs:
   build:
@@ -31,17 +31,17 @@ jobs:
         run: make checkouts patches
 
       - name: Kernel
-        run: make kernel
+        run: REGISTRY_USERNAME=yp28 make kernel
 
       - name: Overlay
-        run: make overlay
+        run: REGISTRY_USERNAME=yp28 make overlay
 
       - name: Installer
-        run: make installer
+        run: REGISTRY_USERNAME=yp28 EXTENSIONS=ghcr.io/siderolabs/iscsi-tools:v0.2.0@sha256:94335171a9caa4db620a3fb09a97b6b473cac25e15b9aeee0d7610dc10895377 make installer
 
       - name: Release
         if: startsWith(github.ref, 'refs/tags/v')
-        run: make release
+        run: REGISTRY_USERNAME=yp28 make release
 
       - name: Create GitHub Release
         env:
@@ -49,25 +49,25 @@ jobs:
         run: |
           NOTES=$(cat <<EOF
           > ⚠️ Experimental build, use at your own risk.
-          
+
           This is a patched version of Talos tailored for the Raspberry Pi 5, including NVMe, NIC and USB support.
-          
+
           ### What's available
-          
+
           - 📦 **Raw disk image** (\`metal-arm64.raw.zst\`) for fresh installs
-          - ⚙️  **Installer image** (\`ghcr.io/talos-rpi5/installer:${{ github.ref_name }}\`) for upgrades
-          
+          - ⚙️  **Installer image** (\`ghcr.io/yp28/installer:${{ github.ref_name }}\`) for upgrades
+
           ### Install
-          
+
           - **Fresh install**
             - Download the raw disk image from this release
             - Flash with \`dd\` or your favorite tool
-          
+
           - **Upgrade existing node**
             \`\`\`bash
-            talosctl upgrade --nodes <NODE_IP> --image ghcr.io/talos-rpi5/installer:${{ github.ref_name }}
+            talosctl upgrade --nodes <NODE_IP> --image ghcr.io/yp28/installer:${{ github.ref_name }}
             \`\`\`
-          
+
           EOF
           )
           gh release create \
